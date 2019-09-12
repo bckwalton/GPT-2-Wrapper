@@ -1,0 +1,16 @@
+
+.DS_Store
+checkpoint/run1/checkpoint
+checkpoint/run1/encoder.json
+checkpoint/run1/hparams.json
+checkpoint/run1/model.ckpt.data-00000-of-00001
+checkpoint/run1/model.ckpt.index
+checkpoint/run1/model.ckpt.meta
+checkpoint/run1/vocab.bpe
+models/117M/checkpoint
+models/117M/encoder.json
+models/117M/hparams.json
+models/117M/model.ckpt.data-00000-of-00001
+*.index
+*.meta
+*.bpe
