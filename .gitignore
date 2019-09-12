@@ -14,3 +14,5 @@ models/117M/model.ckpt.data-00000-of-00001
 *.index
 *.meta
 *.bpe
+*.data-00000-of-00001
+*.json
