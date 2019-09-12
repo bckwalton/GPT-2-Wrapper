@@ -52,6 +52,7 @@ while x:
             gpt2.load_gpt2(sess)
             x = False
         else:
+            fil = input('What files would you like to tune based on? (*.txt files only) (full path)')
             print("Reading "+ fil.replace(".txt",'') +" " + str(rounds) + " times.")
             try:
                 gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds))
