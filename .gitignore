@@ -16,3 +16,5 @@ models/117M/model.ckpt.data-00000-of-00001
 *.bpe
 *.data-00000-of-00001
 *.json
+models/345M/checkpoint
+models/774M/checkpoint
