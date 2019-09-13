@@ -32,7 +32,7 @@ if not os.path.isdir('./models/'+str(model_name)):
     gpt2.download_gpt2(model_name=model_name)   # model is saved into current directory under /models/117M/
     try:
         os.makedirs('checkpoint')
-        copytree('./models/'+model_name,'./checkpoint/run1/')
+        copytree('./models/'+model_name,'./checkpoint/run'+model_name)
     except FileExistsError:
         print('I tried to switch from the previous model but it seems a model was already used previously, in the pursuit of saving potentialy expensive rounds of retraining Ill use the one thats already present')
 sess = gpt2.start_tf_sess()
@@ -45,17 +45,17 @@ while x:
         sess_flag = True
         if int(model_name[0:-1]) > 345:
             print('Models higher than 345M are simply un-finetuneable on modern GPUs, I will only generate.')
-            shutil.rmtree('./checkpoint/', ignore_errors=False, onerror=None)
-            os.makedirs('checkpoint')
-            copytree('./models/'+model_name,'./checkpoint/run1/')
+            #shutil.rmtree('./checkpoint/', ignore_errors=False, onerror=None)
+            #os.makedirs('checkpoint')
+            copytree('./models/'+model_name,'./checkpoint/run'+model_name+'/')
             time.sleep(10)
-            gpt2.load_gpt2(sess)
+            gpt2.load_gpt2(sess,run_name="run"+model_name)
             x = False
         else:
-            fil = input('What files would you like to tune based on? (*.txt files only) (full path)')
+            fil = input('What files would you like to tune based on? (*.txt files only) (full path): ')
             print("Reading "+ fil.replace(".txt",'') +" " + str(rounds) + " times.")
             try:
-                gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds))
+                gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds),run_name="run"+model_name)
             except Exception:
                 x = True
                 
@@ -71,7 +71,7 @@ while x:
                         try:
                             gpt2.reset_session(sess)
                             sess = gpt2.start_tf_sess()
-                            gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds))
+                            gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds),run_name="run"+model_name)
                         except Exception:
                             print('File from downlod repository seems to be corrupted. Should I get a new copy?')
                             y = True
@@ -79,11 +79,11 @@ while x:
                                 response = input('Download (y/n)')
                                 if response == 'y':
                                     gpt2.download_gpt2(model_name=model_name)
-                                    gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds))
+                                    gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds),run_name="run"+model_name)
                                     y = False
                                 elif response == 'n':
                                     gpt2.reset_session(sess)
-                                    gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds))
+                                    gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds),run_name="run"+model_name)
                                     y = False
                                 else:
                                     print('(y/n) please')
