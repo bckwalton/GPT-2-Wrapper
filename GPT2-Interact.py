@@ -52,9 +52,19 @@ while x:
             gpt2.load_gpt2(sess,run_name="run"+model_name)
             x = False
         else:
-            fil = input('What files would you like to tune based on? (*.txt files only) (full path): ')
+            fil = input('What files would you like to tune based on? (full path) (txt files only): ')
+
+            rounds_tmp = int(input('For how many rounds? (int): ').rstrip())
+            if rounds_tmp:
+                rounds = rounds_tmp
             print("Reading "+ fil.replace(".txt",'') +" " + str(rounds) + " times.")
             try:
+                try:
+                    gpt2.reset_session(sess)
+                    sess = gpt2.start_tf_sess()
+                    gpt2.load_gpt2(sess,run_name="run"+model_name)
+                except Exception:
+                    pass
                 gpt2.finetune(sess, fil, model_name=model_name, steps=int(rounds),run_name="run"+model_name)
             except Exception:
                 x = True
@@ -63,9 +73,9 @@ while x:
                 while x:
                     response = input('Purge? (y/n): ').lower()
                     if response == 'y':
-                        shutil.rmtree('./checkpoint/', ignore_errors=False, onerror=None)
-                        os.makedirs('checkpoint')
-                        copytree('./models/'+model_name,'./checkpoint/run1/')
+                        shutil.rmtree('./checkpoint/run'+model_name+'/', ignore_errors=False, onerror=None)
+                        # os.makedirs('./checkpoint/run'+model_name+'/')
+                        copytree('./models/'+model_name,'./checkpoint/run'+model_name+'/')
                         time.sleep(10)
                         x = False
                         try:
@@ -100,7 +110,8 @@ while x:
     elif response == 'n':
         print('Got it, Generating only then')
         if not sess_flag:
-            gpt2.load_gpt2(sess)
+            # gpt2.load_gpt2(sess)
+            gpt2.load_gpt2(sess,run_name="run"+model_name)
         x = False
         prompt = input('Prompt: ')
         print('... ')
